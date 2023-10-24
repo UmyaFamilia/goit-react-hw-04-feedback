@@ -4,46 +4,36 @@ import { FeedbackOptions } from './FeedbackOptions/FeedbackOptions';
 import { Section } from './ComponentsCover/Section';
 import { Notification } from './NothingIsChosen/Notification';
 export function App() {
-  let [good, setGood] = useState(0);
-  let [neutral, setNeutral] = useState(0);
-  let [bad, setBad] = useState(0);
+  const [good, setGood] = useState(0);
+  const [neutral, setNeutral] = useState(0);
+  const [bad, setBad] = useState(0);
 
-  const obj = {
-    good: good,
-    neutral: neutral,
-    bad: bad,
-  };
   const handleClick = ({ target: { name } }) => {
-    console.log(obj);
-    if (name === 'good') {
-      setGood(prev => (good = prev + 1));
-    }
-    if (name === 'neutral') {
-      setNeutral(prev => (neutral = prev + 1));
-    }
-    if (name === 'bad') {
-      setBad(prev => (bad = prev + 1));
+    // eslint-disable-next-line default-case
+    switch (name) {
+      case 'good':
+        setGood(prev => prev + 1);
+        break;
+      case 'neutral':
+        setNeutral(prev => prev + 1);
+        break;
+      case 'bad':
+        setBad(prev => prev + 1);
+        break;
     }
   };
-  const countTotalFeedback = body => {
-    let a = 0;
-    for (const key in body) {
-      a += body[key];
-    }
-    return a;
+  const countTotalFeedback = () => {
+    return good + neutral + bad;
   };
   const countPositiveFeedbackPercentage = () => {
-    return (
-      (100 * good) /
-      countTotalFeedback({ good: good, neutral: neutral, bad: bad })
-    ).toFixed(0);
+    return ((100 * good) / countTotalFeedback()).toFixed(0);
   };
 
   return (
     <div className="container">
       <Section title="Please leave feedbackd">
         <FeedbackOptions
-          options={Object.keys({ good: good, neutral: neutral, bad: bad })}
+          options={['good', 'neutral', 'bad']}
           onLeaveFeedback={handleClick}
         />
       </Section>
@@ -56,11 +46,7 @@ export function App() {
             good={good}
             neutral={neutral}
             bad={bad}
-            total={countTotalFeedback({
-              good: good,
-              neutral: neutral,
-              bad: bad,
-            })}
+            total={countTotalFeedback()}
             positivePercentage={countPositiveFeedbackPercentage()}
           />
         </Section>
